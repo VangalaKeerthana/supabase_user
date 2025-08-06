@@ -1,8 +1,12 @@
 name: Daily Fetch Users
 
 on:
+  # Allows manual runs from GitHub’s UI
+  workflow_dispatch:
+
+  # Also keep the daily schedule
   schedule:
-    - cron: '0 8 * * *'  # every day at 8 AM UTC
+    - cron: '0 8 * * *'
 
 jobs:
   fetch-users:
