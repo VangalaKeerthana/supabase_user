@@ -20,13 +20,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-          cache: 'pnpm'
+          cache: 'npm'
 
       # 3) Install dependencies
       - name: Install dependencies
-        run: |
-          corepack enable
-          pnpm install --frozen-lockfile
+        run: npm ci
 
       # 4) Fetch from Supabase and write to users.json
       - name: Fetch and save users
