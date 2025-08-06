@@ -31,29 +31,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          node -e "
-          const { createClient } = require('@supabase/supabase-js');
-          const fs = require('fs');
-          (async () => {
-            const sb = createClient(
-              process.env.SUPABASE_URL,
-              process.env.SUPABASE_SERVICE_ROLE_KEY
-            );
-            const { data, error } = await sb
-              .from('admin_user_view')
-              .select('email, name, organization');
-            if (error) {
-              console.error('Supabase Error:', JSON.stringify(error, null, 2));
-              process.exit(1);
-            }
-            fs.writeFileSync('users.json', JSON.stringify(data, null, 2));
-            console.log('Saved', data.length, 'users');
-          })().catch(err => {
-            console.error('Unexpected error:', err);
-            process.exit(1);
-          });
-          "
+        run: npx tsx scripts/fetchUsers.ts
 
       # 5) Upload the JSON as an artifact
       - name: Upload user data artifact

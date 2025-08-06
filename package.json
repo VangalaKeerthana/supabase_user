@@ -11,6 +11,9 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
-    "@supabase/supabase-js": "^2.53.0"
+    "@supabase/supabase-js": "^2.39.6"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3"
   }
 }
