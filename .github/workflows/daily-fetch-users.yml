@@ -1,0 +1,39 @@
+name: Daily Fetch Users
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # every day at 8 AM UTC
+
+jobs:
+  fetch-users:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fetch and save users
+        run: |
+          node -e "
+          const { createClient } = require('@supabase/supabase-js');
+          const fs = require('fs');
+          (async () => {
+            const sb = createClient(
+              process.env.SUPABASE_URL,
+              process.env.SUPABASE_SERVICE_ROLE_KEY
+            );
+            const { data, error } = await sb
+              .from('admin_user_view')
+              .select('id, email, name, organization');
+            if (error) throw error;
+            fs.writeFileSync('users.json', JSON.stringify(data, null, 2));
+            console.log('Saved', data.length, 'users');
+          })();
+          "
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Upload user data artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: user-data
+          path: users.json
