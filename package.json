@@ -1,0 +1,16 @@
+{
+  "name": "supabase_user",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000s\u0000u\u0000p\u0000a\u0000b\u0000a\u0000s\u0000e\u0000_\u0000u\u0000s\u0000e\u0000r\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.53.0"
+  }
+}
