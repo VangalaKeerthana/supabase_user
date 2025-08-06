@@ -53,5 +53,5 @@ jobs:
       - name: Upload user data artifact
         uses: actions/upload-artifact@v4
         with:
-        name: user-data
-        path: users.json
+         name: user-data
+         path: users.json
