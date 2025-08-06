@@ -1,33 +1,38 @@
 name: Daily Fetch Users
 
 on:
-  # Allows manual runs from GitHub’s UI
+  # Manual trigger
   workflow_dispatch:
 
-  # Also keep the daily schedule
+  # Scheduled daily at 8 AM UTC
   schedule:
     - cron: '0 8 * * *'
 
 jobs:
   fetch-users:
     runs-on: ubuntu-latest
+
     steps:
+      # 1) Check out your repo
       - uses: actions/checkout@v3
 
-      # 1) Install Node (with pnpm support) and enable corepack
+      # 2) Set up Node (with pnpm cache)
       - uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '18.x'
           cache: 'pnpm'
 
-      # 2) Install your dependencies via pnpm
+      # 3) Install dependencies
       - name: Install dependencies
         run: |
           corepack enable
           pnpm install --frozen-lockfile
 
-      # 3) Fetch and save users
+      # 4) Fetch from Supabase and write to users.json
       - name: Fetch and save users
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           node -e "
           const { createClient } = require('@supabase/supabase-js');
@@ -45,13 +50,10 @@ jobs:
             console.log('Saved', data.length, 'users');
           })();
           "
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-      # 4) Upload artifact
+      # 5) Upload the JSON as an artifact
       - name: Upload user data artifact
         uses: actions/upload-artifact@v4
         with:
-         name: user-data
-         path: users.json
+          name: user-data
+          path: users.json
